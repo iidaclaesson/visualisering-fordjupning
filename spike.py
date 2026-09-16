@@ -10,10 +10,8 @@ print("Python:", sys.version.split()[0])
 print("Pandas:", pd.__version__)
 print("Plotly:", plotly.__version__)
 
-orders = pd.read_csv("data/orders.csv")
-fig = sales_by_category(orders)
-
 orders = prepare_orders(pd.read_csv("data/orders.csv"))
+fig = sales_by_category(orders)
 
 fig.write_html("chart.html")
 fig.write_image("chart.png")
