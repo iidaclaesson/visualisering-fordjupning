@@ -4,5 +4,15 @@ import plotly.graph_objects as go
 
 
 def sales_by_category(orders: pd.DataFrame) -> go.Figure:
-    summary = orders.groupby("product_category", as_index=False)["unit_price"].sum()
-    return px.bar(summary, x="product_category", y="unit_price")
+    summary = orders.groupby("product_category", as_index=False)["order_value"].sum()
+    fig = px.bar(summary, x="product_category", y="order_value")
+    fig.update_traces(hovertemplate="%{x}<br>%{y:,.0f}<extra></extra>")
+    return fig
+
+
+def sales_over_time(orders: pd.DataFrame) -> go.Figure:
+    summary = orders.groupby("order_date", as_index=False)["order_value"].sum()
+    fig = px.line(summary, x="order_date", y="order_value")
+    fig.update_traces(hovertemplate="%{x|%Y-%m-%d}<br>%{y:,.0f}<extra></extra>")
+    fig.update_layout(hovermode="x unified")
+    return fig
