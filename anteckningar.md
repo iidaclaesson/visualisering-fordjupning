@@ -20,3 +20,6 @@ Värden: [np.float64(9150.0), np.float64(88132.0), np.float64(25155.0), np.float
 (.venv) 
 Plotly lagrar figutrens data som numpy-arrayer, inte som python listor.
 Lösning: Istället för denna rad: print("Värden:", list(fig.data[0].y)) i spike.py, byts list() ut till tolist() - tolist() kan även översätta elementen från numpys till python medan listan byggs.
+
+
+pytest missing columns = testar både att allt fungerar men även att omd et går sönder, så går det sönder på "rätt" sätt
