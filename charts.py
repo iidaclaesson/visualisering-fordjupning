@@ -32,3 +32,17 @@ def sales_over_time(orders: pd.DataFrame) -> go.Figure:
     fig.update_traces(hovertemplate="%{x|%Y-%m-%d}<br>%{y:,.0f}<extra></extra>")
     fig.update_layout(hovermode="x unified")
     return fig
+
+
+def price_vs_quantity(orders: pd.DataFrame) -> go.Figure:
+    required = {"unit_price", "quantity", "product_category"}
+    missing = required.difference(orders.columns)
+    if missing:
+        raise ValueError(f"Missing columns: {', '.join(sorted(missing))}")
+
+    if orders.empty:
+        raise ValueError("Orders is empty, at least one row is required")
+
+    fig = px.scatter(orders, x="unit_price", y="quantity", color="product_category")
+    fig.update_traces(hovertemplate="Price: %{x}<br>Quantity: %{y}")
+    return fig

@@ -1,6 +1,6 @@
 import pandas as pd
 import pytest
-from charts import sales_by_category
+from charts import sales_by_category, price_vs_quantity
 from prepare import prepare_orders
 
 def test_figure_containing_categories():
@@ -13,6 +13,11 @@ def test_hovertemplate():
     orders = prepare_orders(pd.read_csv("data/orders.csv"))
     fig = sales_by_category(orders)
     assert "%{x}" in fig.data[0].hovertemplate
+
+def test_one_trace_per_category():
+    orders = prepare_orders(pd.read_csv("data/orders.csv"))
+    fig = price_vs_quantity(orders)
+    assert len(fig.data) == orders["product_category"].nunique()
 
 def test_missing_columns():
     orders = pd.DataFrame({"product_category": ["Books"]})
