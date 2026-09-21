@@ -3,14 +3,17 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-def sales_by_category(orders: pd.DataFrame) -> go.Figure:
-    required = {"product_category", "order_value"}
+def _validate_orders(orders: pd.DataFrame, required: set[str]) -> None:
     missing = required.difference(orders.columns)
     if missing:
         raise ValueError(f"Missing columns: {', '.join(sorted(missing))}")
 
     if orders.empty:
         raise ValueError("Orders is empty, at least one row is required")
+
+
+def sales_by_category(orders: pd.DataFrame) -> go.Figure:
+    _validate_orders(orders, {"product_category", "order_value"})
 
     summary = orders.groupby("product_category", as_index=False)["order_value"].sum()
     fig = px.bar(summary, x="product_category", y="order_value")
@@ -19,13 +22,7 @@ def sales_by_category(orders: pd.DataFrame) -> go.Figure:
 
 
 def sales_over_time(orders: pd.DataFrame) -> go.Figure:
-    required = {"order_date", "order_value"}
-    missing = required.difference(orders.columns)
-    if missing:
-        raise ValueError(f"Missing columns: {', '.join(sorted(missing))}")
-    if orders.empty:
-        raise ValueError("Orders is empty, at least one row is required")
-
+    _validate_orders(orders, {"order_date", "order_value"})
     
     summary = orders.groupby("order_date", as_index=False)["order_value"].sum()
     fig = px.line(summary, x="order_date", y="order_value")
@@ -35,13 +32,7 @@ def sales_over_time(orders: pd.DataFrame) -> go.Figure:
 
 
 def price_vs_quantity(orders: pd.DataFrame) -> go.Figure:
-    required = {"unit_price", "quantity", "product_category"}
-    missing = required.difference(orders.columns)
-    if missing:
-        raise ValueError(f"Missing columns: {', '.join(sorted(missing))}")
-
-    if orders.empty:
-        raise ValueError("Orders is empty, at least one row is required")
+    _validate_orders(orders, {"unit_price", "quantity", "product_category"})
 
     fig = px.scatter(orders, x="unit_price", y="quantity", color="product_category")
     fig.update_traces(hovertemplate="Price: %{x}<br>Quantity: %{y}")
