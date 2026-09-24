@@ -18,6 +18,7 @@ def sales_by_category(orders: pd.DataFrame) -> go.Figure:
     summary = orders.groupby("product_category", as_index=False)["order_value"].sum()
     fig = px.bar(summary, x="product_category", y="order_value")
     fig.update_traces(hovertemplate="%{x}<br>%{y:,.0f}<extra></extra>")
+    fig.update_layout(separators=", ")
     return fig
 
 
